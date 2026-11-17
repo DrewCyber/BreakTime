@@ -10,16 +10,21 @@ APP="build/BreakTime.app"
 
 echo "==> swift build (-c $CONFIG, $ARCHS)"
 if [[ "$ARCHS" == "universal" ]]; then
-  swift build -c "$CONFIG" --arch arm64 --arch x86_64
+  BUILD_ARGS="-c $CONFIG --arch arm64 --arch x86_64"
 else
-  swift build -c "$CONFIG"
+  BUILD_ARGS="-c $CONFIG"
 fi
+swift build $BUILD_ARGS # intentional word splitting of BUILD_ARGS
+
+# Ask SwiftPM where the products are: the .build/<config> symlink is not
+# created for --arch builds on all toolchain versions.
+BIN_DIR="$(swift build $BUILD_ARGS --show-bin-path)"
 
 echo "==> assembling $APP"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
-cp ".build/$CONFIG/BreakTime" "$APP/Contents/MacOS/BreakTime"
+cp "$BIN_DIR/BreakTime" "$APP/Contents/MacOS/BreakTime"
 cp App/Info.plist "$APP/Contents/Info.plist"
 
 if [[ -n "$APP_VERSION" ]]; then
