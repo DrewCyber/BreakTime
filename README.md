@@ -9,6 +9,18 @@ The interface follows the classic layout: a sidebar over the toolbar
 (+ / pause / gear / help), **Activity**, a **Breaks** section with live
 countdown rows, and **Options** (General, Shortcuts, Rules, Advanced).
 
+![BreakTime sidebar with break list and the Schedule page](Screenshot.png)
+
+## Install
+
+Grab `BreakTime_vX.Y.Z_universal.zip` from
+[Releases](../../releases) — a universal build for Apple Silicon and Intel.
+Unzip, move `BreakTime.app` to `/Applications`, done.
+
+The app is ad-hoc signed, so Gatekeeper will warn about an unidentified
+developer on first launch: right-click the app and choose **Open**, or run
+`xattr -dr com.apple.quarantine /Applications/BreakTime.app`.
+
 ## Features
 
 - **Menu bar status item**: without a Dock icon, clicking it opens a compact
@@ -52,6 +64,13 @@ Requires Xcode with Swift 5.9+ (built with Swift 6.4) and macOS 13+.
 ```bash
 ./make-app.sh            # debug build:  ./make-app.sh debug
 open build/BreakTime.app
+```
+
+For a universal (arm64 + x86_64) release build, as used by the CI release
+pipeline (`.github/workflows/release.yml`, triggered by `v*` tags):
+
+```bash
+APP_VERSION=0.0.1 ./make-app.sh release universal
 ```
 
 The script compiles the Swift Package, generates the app icon programmatically
